@@ -1,0 +1,166 @@
+{% extends "master.html" %}
+{% block title %}
+   AI Roleplayer
+{% endblock %}
+{% block content %}
+<div class="page-title">
+<h2>AI Roleplayer Chatbot</h2>
+<h3>Speak to your favorite character from any franchise</h3>
+</div>
+<div class="container">
+    <div class="chatbox">
+        <div class="chatbox__support">
+            <div class="chatbox__header">
+                
+                <div class="chatbox__content--header">
+                    <h4 class="chatbox__heading--header">ChatBot</h4>
+                    <p class="chatbox__description--header"></p>
+                    <form method="post" id="chat" action="{% url 'chatbot' %}">
+                        <!-- This token ensures that the request is coming from the same site. -->
+                        {% csrf_token %}
+                        
+                        <!-- Input for character choice -->
+                        <div class="choices">
+                        <label for="character_choice">Enter the character you want to speak with:</label><br>
+                        <textarea name="character_choice" rows = 1>{{ request.POST.character_choice }}</textarea><br><br>
+                        
+                        <!-- Input for associated media -->
+                        <label for="media">Enter the name of the movie/book/etc The character is from:</label><br>
+                        <textarea name="media_choice" rows = 1>{{ request.POST.media_choice }}</textarea><br><br>
+                        </div>
+                        <div class="chatbox__messages mb-3">
+                            <div></div>
+                        </div>
+                        <!-- User input -->
+                        <div class="chatbox__footer">
+                            <textarea name="user_in" placeholder="Write a message...">{{ request.POST.user_in }}</textarea>
+                            <div class="input-group-append">
+                                <button class="btn btn-primary send__button">Send</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+        </div>
+        <div class="chatbox__button">
+            <button></button>
+        </div>
+    </div>
+</div>
+<div class="response">
+    <!-- Display the generated text 
+{% if generated_text %}
+    <h3><span>{{ request.POST.character_choice }}</span> Says:</h3>
+    <p>{{ generated_text }}</p>
+{% endif %}
+-->
+</div>
+<script>
+    class Chatbox {
+        constructor() {
+            this.args = {
+                openButton: document.querySelector('.chatbox__button'),
+                chatBox: document.querySelector('.chatbox__support'),
+                sendButton: document.querySelector('.send__button')
+            }
+    
+            this.state = false;
+            this.messages = [];
+        }
+    
+        display() {
+            const {openButton, chatBox, sendButton} = this.args;
+    
+            openButton.addEventListener('click', () => this.toggleState(chatBox))
+    
+            //sendButton.addEventListener('click', () => this.sendMessage(chatBox))
+    
+            const node = chatBox.querySelector('textarea[name="user_in"]');
+            node.addEventListener("keyup", ({key}) => {
+                if (key === "Enter") {
+                    this.sendMessage(chatBox)
+                }
+            })
+    
+            // Attach form submission event listener here
+            document.querySelector('#chat').addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.sendMessage(chatBox);
+            });
+        }
+    
+        toggleState(chatbox) {
+            this.state = !this.state;
+    
+            // show or hides the box
+            if(this.state) {
+                chatbox.classList.add('chatbox--active')
+            } else {
+                chatbox.classList.remove('chatbox--active')
+            }
+        }
+        sendMessage(chatbox) {
+            // Get the data from the character and media choice form
+            var characterChoice = document.querySelector('.choices textarea[name="character_choice"]').value;
+            var mediaChoice = document.querySelector('.choices textarea[name="media_choice"]').value;
+    
+            // Get the data from the user input form
+            var userIn = chatbox.querySelector('textarea[name="user_in"]').value;
+            let text1 = userIn
+            if (text1 === "") {
+                return;
+            }
+            let msg1 = { name: "User", message: text1 }
+            chatbox.querySelector('textarea[name="user_in"]').value = '';
+            this.messages.push(msg1);
+            this.updateChatText(chatbox);
+
+            // Create a FormData object and append all the data
+            var formData = new FormData();
+            formData.append('character_choice', characterChoice);
+            formData.append('media_choice', mediaChoice);
+            formData.append('user_in', userIn);
+    
+            // Send the form data to the server
+            fetch(document.querySelector('#chat').action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': document.querySelector('#chat [name=csrfmiddlewaretoken]').value
+                }
+            })
+            .then(response => response.json())
+            .then(response => {
+                console.log(response);
+                let msg2 = { name: "Sam", message: response.generated_text };
+                this.messages.push(msg2);
+                this.updateChatText(chatbox);
+                textField.value = ''
+            })
+            .catch(error => console.error('Error:', error));
+            //this.updateChatText(chatbox)
+            //textField.value = ''
+        }
+
+        updateChatText(chatbox) {
+            var html = '';
+            this.messages.slice().forEach(function(item, index) {
+                if (item.name === "Sam")
+                {
+                    html += '<div class="alert alert-primary messages__item messages__item--visitor">' + item.message + '</div>'
+                }
+                else
+                {
+                    html += '<div class="alert alert-secondary messages__item messages__item--operator">' + item.message + '</div>'
+                }
+            });
+        
+            const chatmessage = chatbox.querySelector('.chatbox__messages');
+            chatmessage.innerHTML = html;
+        }
+    }
+const chatbox = new Chatbox();
+chatbox.display();
+</script>
+{% endblock %}

@@ -1,0 +1,139 @@
+body {
+    background-color: rgb(82, 82, 82);
+    color: aliceblue;
+    font-size: 20px;
+}
+.page-title {
+    text-align: center;
+    padding-bottom: 30px;
+    padding-top: 30px;
+  }
+  .page-title h2 {
+    font-size: 32px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    position: relative;
+    color: #ffffff;
+  }
+  .send__button {
+    background-color: rgb(64, 80, 224);
+    color: white; /* White text *//
+}
+.send__button:hover {
+  background-color: rgb(57, 0, 57); /* Darker green */
+  color: white; /* White text */
+}
+
+  .page-title h2::before {
+    content: "";
+    position: absolute;
+    display: block;
+    width: 120px;
+    height: 1px;
+    background: #ddd;
+    bottom: 1px;
+    left: calc(50% - 60px);
+  }
+  
+  .page-title h2::after {
+    content: "";
+    position: absolute;
+    display: block;
+    width: 40px;
+    height: 3px;
+    background: #b60000c1;
+    bottom: 0;
+    left: calc(50% - 20px);
+  }
+  .choices {
+    text-align: center;
+    padding-bottom: 30px;
+  }
+  .choices textarea{
+    background-color: rgb(226, 226, 226);
+    border-radius: 4px;
+    box-shadow: none;
+    font-size: 20px;
+    width: 50%;
+    margin: auto;
+  }
+  .choices button[type=submit]{
+    background: #b60000c1;
+    border: 0;
+    padding: 10px 35px;
+    color: #fff;
+    transition: 0.4s;
+    border-radius: 50px;
+  }
+  .response {
+    margin: 25px 0 0 0;
+    padding: 25px;
+  }
+  .response h3{
+    text-align: center;
+    margin: 25px 0 0 0;
+  }
+  .response h3 span{
+    color: #df0000c1;
+  }
+  .chatbox__footer{
+    text-align: center;
+    padding-bottom: 30px;
+  }
+  .chatbox__footer textarea{
+    background-color: rgb(226, 226, 226);
+    border-radius: 4px;
+    box-shadow: none;
+    font-size: 20px;
+    width: 50%;
+    margin: auto;
+  }
+  .chatbox__image--header{
+    width: 50%;
+    margin: auto;
+  }
+  .chatbox__heading--header {
+    width: 50%;
+    margin: auto;
+}
+
+.chatbox__description--header {
+  width: 50%;
+  margin: auto;
+}
+
+  .chatbox__messages {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50%;
+    margin: auto;
+}
+  .alert.alert-primary, .alert.alert-secondary {
+    border-radius: 20px; /* Increase this for more rounded corners */
+    padding: 5px 10px; /* Adjust this to change the space around the text */
+    display: block; /* This will make the alert fit the width of the text */
+    max-width: 50%; /* This will ensure the messages don't take up more than half the width of the container */
+
+}
+.alert.alert-secondary {
+  display: inline-block; /* This will make the alert fit the width of the text */
+  align-self: flex-end;
+  
+}
+  .alert.alert-primary {
+    /*background-color: #b60000c1; /* Change the background color */
+    background: linear-gradient(to right, rgb(64, 80, 224), rgb(57, 0, 57));
+    color: #fff; /* Change the text color */
+    border-radius: 20px; /* Round the corners */
+    padding: 5px 10px; /* Add some padding */
+    margin: 10px 0; /* Add some space above and below the message */
+    font-size: 16px; /* Change the font size */
+    line-height: 1.5; /* Change the line height */
+    font-family: 'Arial', sans-serif; /* Change the font */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); /* Add a shadow */
+    width: 100%;
+    align-self: flex-start;
+}
