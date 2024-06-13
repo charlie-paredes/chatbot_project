@@ -4,7 +4,7 @@ from django.http import JsonResponse
 import google.generativeai as genai
 
 def chatbot(request):
-    genai.configure(api_key='AIzaSyCKjBW9EB9XSQNwh__rARG6rc4nu8tTr6w')
+    genai.configure(api_key=key)
     model = genai.GenerativeModel('gemini-pro')
 
     if request.method == 'POST':
