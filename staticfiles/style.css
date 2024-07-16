@@ -3,10 +3,57 @@ body {
     color: aliceblue;
     font-size: 25px;
 }
+/* Hamburger button options ******************************************** */
+#hamburger {
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 10px;
+}
+
+.hamburger__line {
+  width: 30px;
+  height: 3px;
+  background-color: #dad5d5;
+  margin: 2px 0;
+}
+.register-link {
+  list-style: none;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 25px;
+  color: white; /* White text *//
+}
+
+.login-link {
+  list-style: none;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 25px;
+  color: white; /* White text *//
+}
+.btn-register, .btn-login, .send__button, .new-chat-btn {
+  background-color: rgb(64, 80, 224);
+  font-size: 25px;
+  text-decoration: none;
+  color: white; /* White text *//
+}
+.btn-register:hover, .btn-login:hover, .send__button:hover, .new-chat-btn:hover {
+  background-color: rgb(57, 0, 57);
+  color: white; /* White text */
+}
+
+
+
 .page-title {
     text-align: center;
     padding-bottom: 30px;
-    padding-top: 30px;
+    padding-top: 40px;
   }
   .page-title h2 {
     font-size: 32px;
@@ -17,16 +64,7 @@ body {
     position: relative;
     color: #ffffff;
   }
-  .send__button {
-    background-color: rgb(64, 80, 224);
-    font-size: 25px;
-    color: white; /* White text *//
-}
-.send__button:hover {
-  background-color: rgb(57, 0, 57); /* Darker green */
-  color: white; /* White text */
-}
-
+  
   .page-title h2::before {
     content: "";
     position: absolute;

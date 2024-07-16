@@ -1,0 +1,6 @@
+{% for message in messages %}
+    <div class="chat-message">
+        <p><strong>User Input:</strong> {{ message.user_input }}</p>
+        <p><strong>Generated Response:</strong> {{ message.generated_response }}</p>
+    </div>
+{% endfor %}

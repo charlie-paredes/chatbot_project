@@ -15,7 +15,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -32,6 +31,8 @@ ALLOWED_HOSTS = ['gembot-6606b07e8ba6.herokuapp.com', '127.0.0.1']
 
 INSTALLED_APPS = [
     'chatbot_app',
+    'users',
+    'bootstrap4',
 
     'django.contrib.admin',
     'django.contrib.auth',

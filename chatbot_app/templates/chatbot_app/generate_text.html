@@ -1,4 +1,4 @@
-{% extends "master.html" %}
+{% extends "chatbot_app/master.html" %}
 {% block title %}
    AI Roleplayer
 {% endblock %}
@@ -6,6 +6,60 @@
 <div class="page-title">
 <h2>AI Roleplayer Chatbot</h2>
 <h3>Speak to your favorite character from any franchise</h3>
+<!--add a space-->
+{% if user.is_authenticated %}
+			<li class="nav-item register-link">
+				<span class="navbar-text">Hello, {{ user.username }}.</span>
+			</li>
+			<li class="nav-item login-link">
+				<form action="{% url 'users:logout' %}" method="post">
+					{% csrf_token %}
+					<button class="btn btn-primary btn-login" type="submit">Log out</button>
+				</form>
+			</li>
+		{% else %}
+			<li class="nav-item register-link">
+				<a class = "btn btn-primary btn-register" href="{% url 'users:register' %}">Register</a>
+			</li>
+			<li class="nav-item login-link">
+				<a class = "btn btn-primary btn-login" href="{% url 'users:login' %}">Log in</a>
+			</li>
+		{% endif %}
+</div>
+
+<button id="hamburger">
+    <span class="hamburger__line"></span>
+    <span class="hamburger__line"></span>
+    <span class="hamburger__line"></span>
+</button>
+
+<div id="previous-chats" style="display:none;">
+    <form method="post" action="{% url 'chatbot_app:clear_chats' %}">
+        {% csrf_token %}
+        <!--<button type="submit" name="clear_chats" value="1">Clear All Chats</button>-->
+    </form>
+    
+    {% for chat in previous_chats %}
+    <div class="previous-chat">
+        <div class="d-flex align-items-center">
+            <!-- Display only the chats the user created if they're logged in -->
+            {% if user.is_authenticated %}
+                <button class="prev-chat-label btn btn-info" data-session-id="{{ chat.id }}">
+                    <strong>{{ chat.character_choice }}</strong>
+                </button>
+                <!-- Updated part: Form for deleting a single chat -->
+                <form method="post" action="{% url 'chatbot_app:clear_one_chat' %}" style="display: inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="session_id" value="{{ chat.id }}">
+                    <button type="submit" class="btn btn-secondary ml-2" name="clear_one_chat" value="1">X</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+    {% empty %}
+    <p>No previous chats found.</p>
+{% endfor %}
+
 </div>
 <div class="container">
     <div class="chatbox">
@@ -13,9 +67,9 @@
             <div class="chatbox__header">
                 
                 <div class="chatbox__content--header">
-                    <h4 class="chatbox__heading--header">ChatBot</h4>
+                    
                     <p class="chatbox__description--header"></p>
-                    <form method="post" id="chat" action="{% url 'chatbot' %}">
+                    <form method="post" id="chat" action="{% url 'chatbot_app:chatbot' %}">
                         <!-- This token ensures that the request is coming from the same site. -->
                         {% csrf_token %}
                         
@@ -47,7 +101,11 @@
             
         </div>
     </div>
+
+    <button class = "btn btn-primary new-chat-btn" id="new-chat-btn">New Chat</button>
+
 </div>
+
 <div class="response">
     <!-- Display the generated text 
 {% if generated_text %}
@@ -73,20 +131,50 @@
             const {openButton, chatBox, sendButton} = this.args;
     
             openButton.addEventListener('click', () => this.toggleState(chatBox))
-    
-            //sendButton.addEventListener('click', () => this.sendMessage(chatBox))
-    
+                
             const node = chatBox.querySelector('textarea[name="user_in"]');
             node.addEventListener("keyup", ({key}) => {
                 if (key === "Enter") {
                     this.sendMessage(chatBox)
                 }
             })
-    
+
             // Attach form submission event listener here
             document.querySelector('#chat').addEventListener('submit', (e) => {
                 e.preventDefault();
                 this.sendMessage(chatBox);
+            });
+    
+            this.bindPreviousChatButtons();
+        }
+    
+        bindPreviousChatButtons() {
+            document.querySelectorAll('.prev-chat-label').forEach(element => {
+                element.addEventListener('click', () => {
+                    const sessionId = element.getAttribute('data-session-id');
+                    fetch(`/get_chat_details/${sessionId}/`, { // Adjust the URL as needed
+                        method: 'GET',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                        },
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+
+                        document.querySelector('textarea[name="character_choice"]').value = data.character_choice;
+                        document.querySelector('textarea[name="media_choice"]').value = data.media_choice;
+
+                        // Modify this part to alternate names between "User" and "Sam"
+                        this.messages = data.messages.map((msg, index) => {
+                            // Determine the name based on the index being odd or even
+                            const name = index % 2 === 0 ? "User" : "Sam";
+                            return { name: name, message: msg };
+                        });
+                        this.updateChatText(this.args.chatBox);
+                    })
+                    .catch(error => console.error('Error:', error));
+                });
             });
         }
     
@@ -162,5 +250,17 @@
     }
 const chatbox = new Chatbox();
 chatbox.display();
+
+document.getElementById('new-chat-btn').addEventListener('click', function() {
+    window.location.reload();
+});
+document.getElementById('hamburger').addEventListener('click', function() {
+    var previousChats = document.getElementById('previous-chats');
+    if (previousChats.style.display === "none") {
+        previousChats.style.display = "block";
+    } else {
+        previousChats.style.display = "none";
+    }
+});
 </script>
 {% endblock %}

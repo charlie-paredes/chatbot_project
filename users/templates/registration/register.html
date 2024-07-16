@@ -1,0 +1,17 @@
+{% extends "chatbot_app/generate_text.html" %}
+{% block content %}
+<div class="page-title">
+<h2>AI Roleplayer Registration Page</h2>
+</div>
+ <form method="post" action="{% url 'users:register' %}">
+ {% csrf_token %}
+ {{ form.as_p }}
+
+ <button class="btn btn-primary btn-login" name="submit">Register</button>
+ <input type="hidden" name="next" value="{% url 'chatbot_app:chatbot' %}" />
+<!--Add A space-->
+<p></p>
+ <p><a class = "btn btn-primary btn-login" href="{% url 'chatbot_app:chatbot' %}">Continue w/o Registration</a></p>
+ </form>
+
+{% endblock content %}

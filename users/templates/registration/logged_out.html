@@ -1,0 +1,7 @@
+{% extends "chatbot_app/generate_text.html" %}
+
+{% block content %}
+	<p>You have been logged out. Thanks for visiting!</p>
+	<p><a class = "btn btn-primary btn-login" href="{% url 'users:login' %}">Log in again</a></p>
+	<p><a class = "btn btn-primary btn-login" href="{% url 'chatbot_app:chatbot' %}">Return to the home page</a></p>
+{% endblock content %}
